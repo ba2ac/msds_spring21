@@ -16,8 +16,10 @@ income_pp <- read_excel("income_per_person_gdppercapita_ppp_inflation_adjusted.x
 head(income_pp)
 
 population_total <- read_excel("population_total.xlsx")
+head(population_total)
 
 continents <- read.csv('continents2.csv') %>% select('name', 'region')
+head(continents)
 
 # reformatting data
 co2_long <- co2 %>% gather('year', 'co2_pp', 2:ncol(co2)) %>% filter(year >= 1975 & year <= 2003)
@@ -35,11 +37,11 @@ data <- merge(data, population_long, by= c('country', 'year'))
 data <- merge(data, continents, by.x= 'country', by.y= 'name', all.x= TRUE)
 
 # scatterplot
-g <- data %>% ggplot(aes(x= income_pp, y= co2_pp, size= population/1000000, color= region, frame= year)) + 
+g <- data %>% ggplot(aes(label= country, color= region, frame= year, size= population, x= income_pp, y= co2_pp)) + 
   geom_point() + 
   labs(x= 'Income per Person', y= 'CO2 Emissions per Person', 
        title= 'Income vs CO2 Emissions per Person', 
-       size= 'Population (in Millions)', color= 'Continent') +
+       size= 'Population', color= 'Continent') +
   theme(plot.title= element_text(hjust = 0.5))
 
 ggplotly(g)
